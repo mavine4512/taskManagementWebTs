@@ -3,7 +3,6 @@ import ApiService from "./ApiService";
 interface TaskType {
   id: string;
   name: string;
-  // Add more properties as needed
 }
 
 class TaskService extends ApiService {
