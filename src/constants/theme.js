@@ -8,6 +8,7 @@ export const primaryColor = {
   danger: "#C70039",
   lightBlue: "#349aed",
   lightGray: "#ededed",
+  yellow: "#CE8E1D",
   white: "#fff",
 };
 
