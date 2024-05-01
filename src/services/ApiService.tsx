@@ -18,9 +18,8 @@ class ApiService {
 
   put(url: string, objeto: any): Promise<any> {
     const requestUrl = `${this.apiurl}${url}`;
-    return httpClient.put(requestUrl, objeto);
+    return httpClient.patch(requestUrl, objeto);
   }
-
   delete(url: string): Promise<any> {
     const requestUrl = `${this.apiurl}${url}`;
     return httpClient.delete(requestUrl);

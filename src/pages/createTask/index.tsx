@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import { messageError } from '../../componets/toastr';
+import { messageSuccess } from '../../componets/toastr';
+import TaskService from '../../services/taskServices';
 import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
@@ -44,21 +47,22 @@ const useStyles = makeStyles((theme) => ({
 
 interface Task {
   subject: string;
-  priority: string;
+  task_priority: string;
   description: string;
-  due_date?: string;
+  due_date: string;
 }
 
 const CreateTask: React.FC = () => {
   const classes = useStyles();
   const [task, setTask] = useState<Task>({
     subject: '',
-    priority: '',
+    task_priority: '',
     description: '',
-    due_date: ''
+    due_date: '',
   });
 
    const navigate = useNavigate();
+   const service = new TaskService();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -68,19 +72,22 @@ const CreateTask: React.FC = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    // Send POST request to Task API with task data
-    // Code for sending request goes here
-    console.log('Task created:', task);
-    // Clear form fields
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+     e.preventDefault();
+  try {
+    await service.saveTask(task);
     setTask({
-      subject: '',
-      priority: '',
-      description: '',
-      due_date: ''
+    subject: '',
+    task_priority: '',
+    description: '',
+    due_date: '',
     });
-     navigate('/home')
+    navigate('/home');
+    messageSuccess('Task created successfully');
+  } catch (error) {
+    messageError('Error creating task');
+
+  }
   };
 
   return (
@@ -101,8 +108,8 @@ const CreateTask: React.FC = () => {
           select
           label="Priority"
           variant="outlined"
-          name="priority"
-          value={task.priority}
+          name="task_priority"
+          value={task.task_priority}
           onChange={handleChange}
           required
         >
