@@ -11,9 +11,12 @@ const useStyles = makeStyles(() => ({
     justifyContent: "center",
   },
   userListEdit: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
     border: "none",
     borderRadius: "10px",
-    padding: "5px 10px",
+    padding: "8px 12px",
     margin: "10px",
     backgroundColor: primaryColor.lightBlue,
     fontFamily: primaryFonts.sourceSansPro,
@@ -22,9 +25,12 @@ const useStyles = makeStyles(() => ({
     fontSize: "14px",
   },
   userListDeleteItem: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
     border: "none",
     borderRadius: "10px",
-    padding: "5px 10px",
+    padding: "8px 12px",
     margin: "10px",
     backgroundColor: primaryColor.danger,
     fontFamily: primaryFonts.sourceSansPro,
@@ -34,7 +40,7 @@ const useStyles = makeStyles(() => ({
   },
   userListDelete: {
     color: "#fff",
-    fontSize: "15px",
+    fontSize: "18px",
     cursor: "pointer",
   },
   loader: {

@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useParams } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import TaskService from "../../services/taskServices";
+import {messageError} from '../../componets/toastr';
+import {messageSuccess} from '../../componets/toastr';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 
@@ -48,7 +51,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const EditTask: React.FC = () => {
+  const location = useLocation(); 
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const classes = useStyles();
   const [task, setTask] = useState<Task>({
     id: '',
@@ -57,20 +62,24 @@ const EditTask: React.FC = () => {
     description: '',
     due_date: '',
   });
-   const navigate = useNavigate();
 
-  const fetchTaskData = async (taskId: string) => {
+   useEffect(() => {
+    const taskFromLocation = location.state as { task: Task } | undefined;
+    if (taskFromLocation && taskFromLocation.task) {
+      setTask(taskFromLocation.task);
+    } else {
+      fetchTaskData();
+    }
+  }, [id, location.state]);
+
+  const fetchTaskData = async () => {
     try {
-      const response = await axios.get(`https://task.quatrixglobal.com/tasks/${taskId}`);
+      const response = await axios.get(`https://task.quatrixglobal.com/tasks/${task.id}`);
       setTask(response.data);
     } catch (error) {
-      console.error('Error fetching task data:', error);
+      messageError('Error fetching task data:');
     }
   };
-
-  // useEffect(() => {
-  //   fetchTaskData(id);
-  // }, [id]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = event.target;
@@ -78,16 +87,16 @@ const EditTask: React.FC = () => {
       ...prevTask,
       [name]: value,
     }));
-    navigate('/home')
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
       await axios.patch(`https://task.quatrixglobal.com/tasks/${id}`, task);
-      console.log('Task updated successfully');
+      messageSuccess('Task updated successfully');
+      navigate('/home')
     } catch (error) {
-      console.error('Error updating task:', error);
+      messageError('Error updating task:');
     }
   };
 
