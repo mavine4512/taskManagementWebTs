@@ -15,7 +15,7 @@ const Home=()=> {
      const [taskList, setTaskList] = useState<Task[]>([])
      const [loading, setLoading] = useState(true);
      const [currentPage, setCurrentPage] = useState(1);
-     const [tasksPerPage] = useState(5);
+     const [tasksPerPage] = useState(10);
      const [totalTasks, setTotalTasks] = useState(0);
      const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
      const [taskToDelete, setTaskToDelete] = useState<Task | null>(null);
@@ -66,10 +66,21 @@ const Home=()=> {
     setCurrentPage(pageNumber);
   };
 
-   const handleDeleteConfirmation = (task: Task) => {
-    setTaskToDelete(task);
-    setDeleteConfirmationOpen(true);
-  };
+   const handleDeleteConfirmation = async (task: Task) => {
+   const { id } = task;
+  try {
+    await service.deleteTask(id);
+    const updatedTaskList = taskList.filter((t) => t.id !== id);
+    setTaskList(updatedTaskList);
+    setDeleteConfirmationOpen(false);
+    messageSuccess('Task deleted successfully');
+  } catch (error) {
+    messageError('Error deleting task');
+    console.error('Error deleting task:', error);
+  } finally {
+    setLoading(false);
+  }
+};
 
   const handleCloseConfirmation = () => {
     setTaskToDelete(null);
@@ -92,6 +103,62 @@ const Home=()=> {
       messageError("Error deleting task:");
     }
 };   
+
+const handleAction = async (task: Task, action: string) => {
+ console.log('task.status_id',task.status_id)
+  const updatedTask = { ...task };
+  switch (action) {
+    case 'Start Progress':
+      updatedTask.status_id = 'in progress';
+      break;
+    case 'Stop Progress':
+      updatedTask.status_id = 'open';
+      break;
+    case 'Close':
+      updatedTask.status_id = 'closed';
+      break;
+    case 'Reopen':
+      updatedTask.status_id = 'open';
+      break;
+    default:
+      break;
+  }
+  try {
+    const service = new TaskService();
+    await service.updateTask(updatedTask);
+
+    console.log('Task status updated:', updatedTask);
+  } catch (error) {
+    console.error('Error updating task status:', error);
+    // Handle error
+  }
+};
+
+const renderActions = (task: Task) => {
+  const { status_id } = task;
+  switch (status_id) {
+    case 'open':
+      return (
+        <div className={actionItems}>
+          <Button className={userListDeleteItem} style={{ backgroundColor: 'green',padding: "2px 6px",fontSize: "12px" }} onClick={() => handleAction(task, 'Start Progress')}>Start Progress</Button>
+          <Button style={{ backgroundColor: 'red' }} onClick={() => handleAction(task, 'Close')}>Close</Button>
+        </div>
+      );
+    case 'in progress':
+      return (
+        <div className={actionItems}>
+          <Button className={userListDeleteItem} style={{ backgroundColor: 'golden'}} onClick={() => handleAction(task, 'Stop Progress')}>Stop Progress</Button>
+          <Button className={userListDeleteItem} style={{ backgroundColor: 'red', padding: "2px 6px",fontSize: "10px" }} onClick={() => handleAction(task, 'Close')}>Close</Button>
+        </div>
+      );
+    case 'closed':
+      return (
+         <Button className={userListDeleteItem} style={{ backgroundColor: 'skyblue' }} onClick={() => handleAction(task, 'Reopen')}>Reopen</Button>
+      );
+    default:
+      return null;
+  }
+};
 
   return (
     <div className={homeContainer}>
@@ -166,7 +233,7 @@ const Home=()=> {
                         )}
                       </td>
                       <td className={tableRow}>
-                        <div className={actionItems}>
+                         <div className={actionItems}>
                           <button
                             type="button"
                             className={userListEdit}
@@ -179,7 +246,7 @@ const Home=()=> {
                           <button
                             type="button"
                             className={userListDeleteItem}
-                            // onClick={() => handleDeleteConfirmation(task)}
+                            onClick={() => handleDeleteConfirmation(task)}
                           >
                             <DeleteOutline className={userListDelete} />
                             Delete
@@ -205,7 +272,9 @@ const Home=()=> {
                               </Button>
                             </DialogActions>
                           </Dialog>
+                          {renderActions(task)}
                         </div>
+                        
                       </td>
                     </tr>
                   ))}
