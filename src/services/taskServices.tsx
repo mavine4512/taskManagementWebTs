@@ -1,8 +1,11 @@
 import ApiService from "./ApiService";
 
 interface TaskType {
-  id: string;
-  name: string;
+  id?: string,
+  subject: string,
+  task_priority: string,
+  description: string,
+  due_date: string,
 }
 
 class TaskService extends ApiService {
@@ -18,7 +21,7 @@ class TaskService extends ApiService {
     return this.get("tasks/");
   }
 
-  getTaskById(id:TaskType) {
+  getTaskById(id:string) {
     return this.get(`tasks/${id}`);
   }
 
@@ -27,7 +30,8 @@ class TaskService extends ApiService {
   }
 
   updateTask(task:TaskType) {
-    return this.put(`tasks/${task.id}`, task);
+    const { id } = task;
+    return this.put(`tasks/${id}`, task);
   }
 }
 

@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import TaskService from "../../services/taskServices";
-import {messageError} from '../../componets/toastr';
-import {messageSuccess} from '../../componets/toastr';
-import axios from 'axios';
+import TaskService from '../../services/taskServices';
+import { messageError } from '../../componets/toastr';
+import { messageSuccess } from '../../componets/toastr';
 import { Link } from 'react-router-dom';
+
 
 interface Task {
   id: string;
   subject: string;
-  priority: string;
+  task_priority: string;
   description: string;
-  due_date?: string;
+  due_date: string;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -51,37 +51,42 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const EditTask: React.FC = () => {
-  const location = useLocation(); 
+  const location = useLocation();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const classes = useStyles();
   const [task, setTask] = useState<Task>({
     id: '',
     subject: '',
-    priority: '',
+    task_priority: '',
     description: '',
     due_date: '',
   });
 
-   useEffect(() => {
+  const service = new TaskService();
+
+  useEffect(() => {
     const taskFromLocation = location.state as { task: Task } | undefined;
     if (taskFromLocation && taskFromLocation.task) {
       setTask(taskFromLocation.task);
-    } else {
-      fetchTaskData();
+    } else if (id) {
+      fetchTaskData(id);
     }
   }, [id, location.state]);
 
-  const fetchTaskData = async () => {
+  const fetchTaskData = async (taskId: string) => {
     try {
-      const response = await axios.get(`https://task.quatrixglobal.com/tasks/${task.id}`);
-      setTask(response.data);
+      const taskDataResponse = await service.getTaskById(taskId);
+      const taskData = taskDataResponse.data;
+      setTask(taskData);
     } catch (error) {
       messageError('Error fetching task data:');
     }
   };
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = event.target;
     setTask((prevTask) => ({
       ...prevTask,
@@ -92,14 +97,14 @@ const EditTask: React.FC = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      await axios.patch(`https://task.quatrixglobal.com/tasks/${id}`, task);
-      messageSuccess('Task updated successfully');
-      navigate('/home')
+      await service.updateTask(task);
+      navigate('/home');
+      messageSuccess("Upadate successfully")
     } catch (error) {
       messageError('Error updating task:');
     }
   };
-
+ {console.log('date',task.due_date)}
   return (
     <div className={classes.formContainer}>
       <h2>Edit Task</h2>
@@ -118,8 +123,8 @@ const EditTask: React.FC = () => {
           select
           label="Priority"
           variant="outlined"
-          name="priority"
-          value={task.priority}
+          name="task_priority"
+          value={task.task_priority}
           onChange={handleInputChange}
           required
         >
@@ -136,16 +141,15 @@ const EditTask: React.FC = () => {
           value={task.description}
           onChange={handleInputChange}
           multiline
-          rows={4}
+          minRows={4}
           required
         />
         <TextField
           className={classes.formInput}
-          // label="Due Date"
           variant="outlined"
           name="due_date"
           type="date"
-          value={task.due_date}
+          value={task.due_date} 
           onChange={handleInputChange}
         />
         <div className={classes.buttonContainer}>
@@ -157,11 +161,7 @@ const EditTask: React.FC = () => {
           >
             Update Task
           </Button>
-          <Button
-            className={classes.backButton}
-            component={Link}
-            to="/home"
-          >
+          <Button className={classes.backButton} component={Link} to="/home">
             Back
           </Button>
         </div>

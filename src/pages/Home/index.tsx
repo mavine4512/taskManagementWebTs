@@ -15,7 +15,7 @@ const Home=()=> {
      const [taskList, setTaskList] = useState<Task[]>([])
      const [loading, setLoading] = useState(true);
      const [currentPage, setCurrentPage] = useState(1);
-     const [tasksPerPage] = useState(5); // Adjust as needed
+     const [tasksPerPage] = useState(5);
      const [totalTasks, setTotalTasks] = useState(0);
      const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
      const [taskToDelete, setTaskToDelete] = useState<Task | null>(null);
@@ -47,7 +47,6 @@ const Home=()=> {
     const fetchData = async () => {
       try {
         const response = await service.getAllTasks();
-        console.log('response', response)
         setTaskList(response.data.data);
         setLoading(false);
       } catch (error) {
@@ -61,7 +60,6 @@ const Home=()=> {
 
  const editAction=(task: Task)=> {
   navigate(`/editTask/${task.id}`, { state: { task } })
-    // navigate("/editTask/" + task.id);
   }
 
   const handlePageChange = (pageNumber: number) => {
@@ -86,15 +84,15 @@ const Home=()=> {
       // await service.deleteTask();
       // Remove the deleted task from the list
       setTaskList(taskList.filter((task) => task.id !== taskToDelete.id));
-      setTotalTasks(totalTasks - 1); // Decrease the total task count
+      setTotalTasks(totalTasks - 1);
       setTaskToDelete(null);
       setDeleteConfirmationOpen(false);
       messageSuccess('Success deleting tasks')
     } catch (error) {
       messageError("Error deleting task:");
     }
-  };
-console.log('taskList:',taskList)
+};   
+
   return (
     <div className={homeContainer}>
       {loading ? (
@@ -216,19 +214,6 @@ console.log('taskList:',taskList)
 
           </Box>
           {/* Pagination */}
-          {/* <div className={classes.pagination}>
-            {Array.from({ length: Math.ceil(data.total / tasksPerPage) }).map(
-              (_, index) => (
-                <button
-                  key={index}
-                  className={currentPage === index + 1 ? "active" : ""}
-                  onClick={() => handlePageChange(index + 1)}
-                >
-                  {index + 1}
-                </button>
-              )
-            )}
-          </div> */}
 
            <div className={pagination}>
             <Button
