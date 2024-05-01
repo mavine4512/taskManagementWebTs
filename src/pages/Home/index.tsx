@@ -3,16 +3,13 @@ import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import useStyles from "./styles";
 import { ColorRing } from "react-loader-spinner";
-import { Box, Button} from "@material-ui/core";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@material-ui/core";
 import { EditOutlined,DeleteOutline } from "@material-ui/icons";
-import tasksData from './tasks.json';
 import {messageError} from '../../componets/toastr';
 import {messageSuccess} from '../../componets/toastr';
 import TaskService from "../../services/taskServices";
 
 import {Task} from "../../interfaces";
-
-const baseURL = "https://task.quatrixglobal.com";
 
 const Home=()=> {
      const [taskList, setTaskList] = useState<Task[]>([])
@@ -20,6 +17,8 @@ const Home=()=> {
      const [currentPage, setCurrentPage] = useState(1);
      const [tasksPerPage] = useState(5); // Adjust as needed
      const [totalTasks, setTotalTasks] = useState(0);
+     const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
+     const [taskToDelete, setTaskToDelete] = useState<Task | null>(null);
 
      const {
     homeContainer,
@@ -44,9 +43,12 @@ const Home=()=> {
   const navigate = useNavigate();
 
    useEffect(() => {
+    setLoading(true);
     const fetchData = async () => {
       try {
-        setTaskList(tasksData.data);
+        const response = await service.getAllTasks();
+        console.log('response', response)
+        setTaskList(response.data.data);
         setLoading(false);
       } catch (error) {
         messageError('Error fetching tasks:');
@@ -57,23 +59,50 @@ const Home=()=> {
   }, []);
 
 
- const edtiAction=(task: Task)=> {
-  console.log('task:',task)
-    // navigate("/editTask/" + {task.id});
+ const editAction=(task: Task)=> {
+  navigate(`/editTask/${task.id}`, { state: { task } })
+    // navigate("/editTask/" + task.id);
   }
 
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
   };
 
+   const handleDeleteConfirmation = (task: Task) => {
+    setTaskToDelete(task);
+    setDeleteConfirmationOpen(true);
+  };
+
+  const handleCloseConfirmation = () => {
+    setTaskToDelete(null);
+    setDeleteConfirmationOpen(false);
+  };
+
+   const handleDeleteTask = async () => {
+    if (!taskToDelete) return;
+
+    try {
+      // await service.deleteTask(taskToDelete.id);
+      // await service.deleteTask();
+      // Remove the deleted task from the list
+      setTaskList(taskList.filter((task) => task.id !== taskToDelete.id));
+      setTotalTasks(totalTasks - 1); // Decrease the total task count
+      setTaskToDelete(null);
+      setDeleteConfirmationOpen(false);
+      messageSuccess('Success deleting tasks')
+    } catch (error) {
+      messageError("Error deleting task:");
+    }
+  };
+console.log('taskList:',taskList)
   return (
     <div className={homeContainer}>
       {loading ? (
         <div className={loader}>
           <ColorRing
             visible={true}
-            height="100"
-            width="100"
+            height={100}
+            width={100}
             ariaLabel="color-ring-loading"
             wrapperStyle={{}}
             wrapperClass="color-ring-wrapper"
@@ -112,7 +141,7 @@ const Home=()=> {
                   taskList.map((task) => (
                     <tr key={task.id}>
                       <td className={tableRow}>{task.id.substring(0, 6)}</td>
-                       <td className={tableRow}>{task.subject}</td>
+                      <td className={tableRow}>{task.subject}</td>
                       <td className={tableRow}>
                         {task.status_id === "closed" && (
                           <span className={closed}>
@@ -129,40 +158,62 @@ const Home=()=> {
                             {task.status_id}
                           </span>
                         )}
-                        </td>
+                      </td>
                       <td className={tableRow}>
                         {task.task_priority}
                       </td>
-                     
-                      
                       <td className={tableRow}>
-                        <td className={tableRow}>
-                          {moment(task.due_date).format(
-                            "MMMM Do YYYY, h:mm:ss a"
-                          )}
-                        </td>
+                        {moment(task.due_date).format(
+                          "MMMM Do YYYY, h:mm:ss a"
+                        )}
                       </td>
                       <td className={tableRow}>
                         <div className={actionItems}>
-                          <button type="button" 
+                          <button
+                            type="button"
                             className={userListEdit}
-                            onClick={() =>edtiAction(task)}
-                            ><EditOutlined className={userListDelete} />
+                            onClick={() => editAction(task)}
+                          >
+                            <EditOutlined className={userListDelete} />
                             Edit
-                    </button>
+                          </button>
 
-                    <button type="button" 
-                           className={userListDeleteItem}
-                            // onClick={e => props.deleteAction(task.id)}
-                            ><DeleteOutline className={userListDelete} />
+                          <button
+                            type="button"
+                            className={userListDeleteItem}
+                            // onClick={() => handleDeleteConfirmation(task)}
+                          >
+                            <DeleteOutline className={userListDelete} />
                             Delete
-                    </button>
+                          </button>
+                          <Dialog
+                            open={deleteConfirmationOpen}
+                            onClose={handleCloseConfirmation}
+                            aria-labelledby="alert-dialog-title"
+                            aria-describedby="alert-dialog-description"
+                          >
+                            <DialogTitle id="alert-dialog-title">{"Delete Task?"}</DialogTitle>
+                            <DialogContent>
+                              <DialogContentText id="alert-dialog-description">
+                                Are you sure you want to delete this task?
+                              </DialogContentText>
+                            </DialogContent>
+                            <DialogActions>
+                              <Button onClick={handleCloseConfirmation} color="primary">
+                                Cancel
+                              </Button>
+                              <Button onClick={handleDeleteTask} color="primary" autoFocus>
+                                Confirm
+                              </Button>
+                            </DialogActions>
+                          </Dialog>
                         </div>
                       </td>
                     </tr>
                   ))}
               </tbody>
-            </table>
+          </table>
+
           </Box>
           {/* Pagination */}
           {/* <div className={classes.pagination}>
