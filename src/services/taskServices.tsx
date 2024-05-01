@@ -25,7 +25,7 @@ class TaskService extends ApiService {
     return this.get(`tasks/${id}`);
   }
 
-  deleteTask(id:TaskType) {
+  deleteTask(id:string) {
     return this.delete(`tasks/${id}`);
   }
 
