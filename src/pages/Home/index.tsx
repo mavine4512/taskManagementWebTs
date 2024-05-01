@@ -105,60 +105,63 @@ const Home=()=> {
 };   
 
 const handleAction = async (task: Task, action: string) => {
- console.log('task.status_id',task.status_id)
-  const updatedTask = { ...task };
-  switch (action) {
-    case 'Start Progress':
-      updatedTask.status_id = 'in progress';
-      break;
-    case 'Stop Progress':
-      updatedTask.status_id = 'open';
-      break;
-    case 'Close':
-      updatedTask.status_id = 'closed';
-      break;
-    case 'Reopen':
-      updatedTask.status_id = 'open';
-      break;
-    default:
-      break;
-  }
+   console.log('clicked action', action);
   try {
-    const service = new TaskService();
-    await service.updateTask(updatedTask);
+    const updatedTask = { ...task };
+    switch (action) {
+      case 'Start Progress':
+        updatedTask.status_id = 'in progress';
+        break;
+      case 'Stop Progress':
+        updatedTask.status_id = 'open';
+        break;
+      case 'Close':
+        updatedTask.status_id = 'closed';
+        break;
+      case 'Reopen':
+        updatedTask.status_id = 'open';
+        break;
+      default:
+        break;
+    }
 
-    console.log('Task status updated:', updatedTask);
+    const service = new TaskService();
+    console.log('updatedTask face one:', updatedTask);
+    const response = await service.updateTask(updatedTask);
+
+    console.log('Task status updated:', response.data);
   } catch (error) {
     console.error('Error updating task status:', error);
-    // Handle error
   }
 };
 
 const renderActions = (task: Task) => {
   const { status_id } = task;
+
   switch (status_id) {
     case 'open':
       return (
         <div className={actionItems}>
-          <Button className={userListDeleteItem} style={{ backgroundColor: 'green',padding: "2px 6px",fontSize: "12px" }} onClick={() => handleAction(task, 'Start Progress')}>Start Progress</Button>
+          <Button className={userListDeleteItem} style={{ backgroundColor: 'green', padding: "2px 6px", fontSize: "12px" }} onClick={() => handleAction(task, 'startProgress')}>Start Progress</Button>
           <Button style={{ backgroundColor: 'red' }} onClick={() => handleAction(task, 'Close')}>Close</Button>
         </div>
       );
     case 'in progress':
       return (
         <div className={actionItems}>
-          <Button className={userListDeleteItem} style={{ backgroundColor: 'golden'}} onClick={() => handleAction(task, 'Stop Progress')}>Stop Progress</Button>
-          <Button className={userListDeleteItem} style={{ backgroundColor: 'red', padding: "2px 6px",fontSize: "10px" }} onClick={() => handleAction(task, 'Close')}>Close</Button>
+          <Button className={userListDeleteItem} style={{ backgroundColor: 'golden' }} onClick={() => handleAction(task, 'stopProgress')}>Stop Progress</Button>
+          <Button className={userListDeleteItem} style={{ backgroundColor: 'red', padding: "2px 6px", fontSize: "10px" }} onClick={() => handleAction(task, 'close')}>Close</Button>
         </div>
       );
     case 'closed':
       return (
-         <Button className={userListDeleteItem} style={{ backgroundColor: 'skyblue' }} onClick={() => handleAction(task, 'Reopen')}>Reopen</Button>
+        <Button className={userListDeleteItem} style={{ backgroundColor: 'skyblue' }} onClick={() => handleAction(task, 'reopen')}>Reopen</Button>
       );
     default:
       return null;
   }
 };
+
 
   return (
     <div className={homeContainer}>
