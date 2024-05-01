@@ -31,6 +31,7 @@ class TaskService extends ApiService {
 
   updateTask(task:TaskType) {
     const { id } = task;
+    console.log('updateTask', task)
     return this.put(`tasks/${id}`, task);
   }
 }
