@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-import { upDateTask } from "../../redux/reducer";
+import {upDateTaskList} from "../../redux/reducer";
 import moment from "moment";
 import useStyles from "./styles";
 import { ColorRing } from "react-loader-spinner";
@@ -75,7 +75,7 @@ const Home=()=> {
     await service.deleteTask(id);
     const updatedTaskList = taskList.filter((t) => t.id !== id);
     setTaskList(updatedTaskList);
-    upDateTask(updatedTaskList);
+    upDateTaskList(updatedTaskList);
     setDeleteConfirmationOpen(false);
     messageSuccess('Task deleted successfully');
   } catch (error) {
@@ -324,7 +324,7 @@ const mapStateToProps = (state: any) => {
 const mapDispatchToProps = (dispatch: any) =>
   bindActionCreators(
     {
-      upDateTask,
+      upDateTaskList,
     },
     dispatch
   ); 
