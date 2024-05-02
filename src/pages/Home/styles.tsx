@@ -81,6 +81,7 @@ const useStyles = makeStyles(() => ({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: "5px",
+    padding:"5px",
     backgroundColor: primaryColor.yellow,
     color: primaryColor.white,
     fontFamily: primaryFonts.sourceSansPro,

@@ -32,7 +32,12 @@ class TaskService extends ApiService {
   updateTask(task:TaskType) {
     const { id } = task;
     console.log('updateTask', task)
-    return this.put(`tasks/${id}`, task);
+    return this.patch(`tasks/${id}`, task);
+  }
+
+  changeStatus(task: TaskType, status: string) {
+     const { id } = task;
+    return this.post(`tasks/${id}/${status}`, task);
   }
 }
 

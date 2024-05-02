@@ -16,7 +16,7 @@ class ApiService {
     return httpClient.post(requestUrl, objeto);
   }
 
-  put(url: string, objeto: any): Promise<any> {
+  patch(url: string, objeto: any): Promise<any> {
     const requestUrl = `${this.apiurl}${url}`;
     return httpClient.patch(requestUrl, objeto);
   }
