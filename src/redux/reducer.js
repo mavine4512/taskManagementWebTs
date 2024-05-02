@@ -6,7 +6,7 @@ export const SAVE_TASK = "SAVE_TASK";
 
 //Action
 
-export function upDateTask(data) {
+export function upDateTaskList(data) {
   return {
     type: "SAVE_TASK",
     payload: data,
