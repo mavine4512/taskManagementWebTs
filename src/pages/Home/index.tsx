@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
+import { upDateTask } from "../../redux/reducer";
 import moment from "moment";
 import useStyles from "./styles";
 import { ColorRing } from "react-loader-spinner";
@@ -72,6 +75,7 @@ const Home=()=> {
     await service.deleteTask(id);
     const updatedTaskList = taskList.filter((t) => t.id !== id);
     setTaskList(updatedTaskList);
+    upDateTask(updatedTaskList);
     setDeleteConfirmationOpen(false);
     messageSuccess('Task deleted successfully');
   } catch (error) {
@@ -142,7 +146,7 @@ const renderActions = (task: Task) => {
     case 'open':
       return (
         <div className={actionItems}>
-          <Button className={userListDeleteItem} style={{ backgroundColor: 'green', padding: "2px 6px", fontSize: "12px" }} onClick={() => handleAction(task, 'startProgress')}>Start Progress</Button>
+          <Button className={userListDeleteItem} style={{ backgroundColor: 'green', padding: "5px 6px", fontSize: "12px" }} onClick={() => handleAction(task, 'startProgress')}>Start Progress</Button>
           <Button style={{ backgroundColor: 'red' }} onClick={() => handleAction(task, 'Close')}>Close</Button>
         </div>
       );
@@ -311,4 +315,17 @@ const renderActions = (task: Task) => {
   );
 }
 
-export default Home;
+const mapStateToProps = (state: any) => {
+  return {
+    data: state.dataState.data,
+  };
+};
+
+const mapDispatchToProps = (dispatch: any) =>
+  bindActionCreators(
+    {
+      upDateTask,
+    },
+    dispatch
+  ); 
+export default connect(mapStateToProps, mapDispatchToProps)(Home);
