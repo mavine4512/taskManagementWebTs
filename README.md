@@ -1,46 +1,97 @@
-# Getting Started with Create React App
+# Task Management Application
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This repository contains my solution to the Quatrix Frontend Interview Challenge, featuring a task management application built with React Typescript and using a provided Task API.
 
-## Available Scripts
+## Technology Stack
 
-In the project directory, you can run:
+- **React**: Client-side rendered React for web apps.
+- **Typescript**: For type checking
+- **Material UI**: third part library.
 
-### `npm start`
+# Project Setup
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Follow these steps to set up and run the project locally on your machine:
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### Prerequisites
 
-### `npm test`
+Node.js and npm installed on your machine ([Download Node.js](https://nodejs.org/))
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Installation
 
-### `npm run build`
+Clone the repository to your local machine and install the dependencies using npm:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```bash
+git clone https://github.com/mavine4512/taskManagementWebTs.git
+cd taskManagementWebTs
+npm install
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Features
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- Create new tasks by filling out a form with subject, priority, description, and optional due date.
+- View existing tasks with details such as subject, priority, description, and due date.
+- Update existing tasks by editing subject, priority, description, and due date.
+- Delete tasks with a confirmation step to prevent accidental deletions.
+- Pagination controls are available to navigate through multiple pages of tasks.
 
-### `npm run eject`
+## Folder Structure
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+```plaintext
+├── tsconfig.json
+├── .gitignore
+├── README.md
+├── index.html
+├── package-lock.json
+├── package.json
+├── public/
+│   ├── index.html
+│   ├── favicon.ico
+│   ├── logo192.png
+│   ├── logo512.png
+│   ├── manifest.json
+│   └── robots.txt
+├── src/
+│   ├── App.tsx
+│   ├── App.css
+│   ├── App.test.tsx
+│   ├── index.tsx
+│   ├── index.css
+│   ├── react-app-env.d.ts
+│   ├── reportWebVitals.ts
+│   ├── setupTexts.ts
+│   ├── component/
+│   │    └── toastr.tsx
+│   ├── constants/
+│   │   └── theme.js
+│   ├── interfaces/
+│   │   └── index.tsx
+│   ├── pages/
+│   │   ├── CreateTask/
+│   │   ├── └── index.tsx
+│   │   ├── EditTask/
+│   │   ├── └── index.tsx
+│   │   ├── Home/
+│   │   ├── ├── index.tsx
+│   │   ├── └── styles.tsx
+│   │   ├── NotFound/
+│   │   ├── └──  index.tsx
+│   │   └── main.tsx
+│   ├── redux/
+│   │   ├── reducer.js
+│   │   └── store.tsx
+│   ├── services/
+│   │   ├── ApiService.tsx
+│   │   └── taskService
+└── tsconfig.json
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- `src/`: Contains all the source code for the React application.
+  - `components/`: Contains React components used to build the application.
+  - `services/`: Contains functions to interact with the Task API.
+- `tests/`: Contains unit tests.
+- `package.json`: Defines project dependencies and scripts.
+- `README.md`: Documentation for the project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## Author
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+- [Mavine Naaman](https://github.com/mavine4512)
