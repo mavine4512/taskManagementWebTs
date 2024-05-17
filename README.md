@@ -95,3 +95,9 @@ npm install
 ## Author
 
 - [Mavine Naaman](https://github.com/mavine4512)
+  
+- /Users/mavinenaaman/Documents/taskmanagementwebts/src/appImages/changeStatus.png
+- /Users/mavinenaaman/Documents/taskmanagementwebts/src/appImages/editTask.png
+- /Users/mavinenaaman/Documents/taskmanagementwebts/src/appImages/listAllTask.png
+- /Users/mavinenaaman/Documents/taskmanagementwebts/src/appImages/update.png
+
