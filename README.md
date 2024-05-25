@@ -18,12 +18,14 @@ Node.js and npm installed on your machine ([Download Node.js](https://nodejs.org
 
 ### Installation
 
-Clone the repository to your local machine and install the dependencies using npm:
+Clone the repository to your local machine and install the dependencies using yarn then use yarn start to run the project:
 
 ```bash
 git clone https://github.com/mavine4512/taskManagementWebTs.git
 cd taskManagementWebTs
-npm install
+yarn
+
+yarn start
 ```
 
 ## Features
