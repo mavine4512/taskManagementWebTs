@@ -5,8 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import TaskService from '../../services/taskServices';
-import { messageError } from '../../componets/toastr';
-import { messageSuccess } from '../../componets/toastr';
+import {messageError, messageSuccess} from '../../components/toast';
 import { Link } from 'react-router-dom';
 
 
@@ -99,7 +98,7 @@ const EditTask: React.FC = () => {
     try {
       await service.updateTask(task);
       navigate('/home');
-      messageSuccess("Upadate successfully")
+      messageSuccess("Update successfully")
     } catch (error) {
       messageError('Error updating task:');
     }

@@ -3,8 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import { messageError } from '../../componets/toastr';
-import { messageSuccess } from '../../componets/toastr';
+import {messageError, messageSuccess} from '../../components/toast';
 import TaskService from '../../services/taskServices';
 import { Link } from 'react-router-dom';
 

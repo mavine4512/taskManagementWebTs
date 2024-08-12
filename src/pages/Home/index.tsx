@@ -1,15 +1,14 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import useStyles from './styles';
 import { useNavigate } from "react-router-dom";
+import moment from "moment";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@material-ui/core";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-import {upDateTaskList} from "../../redux/reducer";
-import moment from "moment";
-import useStyles from "./styles";
 import { ColorRing } from "react-loader-spinner";
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@material-ui/core";
 import { EditOutlined,DeleteOutline } from "@material-ui/icons";
-import {messageError} from '../../componets/toastr';
-import {messageSuccess} from '../../componets/toastr';
+import {upDateTaskList} from "../../redux/reducer";
+import {messageError, messageSuccess} from '../../components/toast';
 import TaskService from "../../services/taskServices";
 
 import {Task} from "../../interfaces";
@@ -23,7 +22,7 @@ const Home=()=> {
      const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
      const [taskToDelete, setTaskToDelete] = useState<Task | null>(null);
 
-     const {
+    const {
     homeContainer,
     userListEdit,
     actionItems,
