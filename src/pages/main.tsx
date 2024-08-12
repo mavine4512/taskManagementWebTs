@@ -1,7 +1,7 @@
 import { BrowserRouter, Route, Routes} from 'react-router-dom';
 import CreateTask from './createTask';
-import EditTask from './EditTask';
-import Home from './Home';
+import EditTask from './editTask';
+import Home from './home';
 import NotFound from './notFound';
 
 const Main = () => {
